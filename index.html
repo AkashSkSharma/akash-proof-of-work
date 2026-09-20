@@ -83,6 +83,22 @@
   .flow-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 15.5px; line-height: 1.35; flex: 1; }
   .flow-toggle { font-size: 18px; color: var(--ink-faint); flex-shrink: 0; transition: transform .2s ease; }
   .flow-item.open .flow-toggle { transform: rotate(45deg); }
+
+  .hint-tag {
+    display: inline-flex; align-items: center; gap: 6px; background: var(--accent-soft); color: var(--accent);
+    font-size: 11.5px; font-weight: 700; padding: 5px 12px; border-radius: 999px; margin-top: 14px;
+  }
+  .hint-tag svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+  .flow-head, .rev-top, .int-top { cursor: pointer; }
+  .expand-icon {
+    width: 24px; height: 24px; border-radius: 50%; background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700;
+    flex-shrink: 0; transition: transform .25s ease, background .25s ease, color .25s ease;
+  }
+  .flow-item.open .expand-icon, .rev-row.open .expand-icon, .int-card.open .expand-icon {
+    transform: rotate(45deg); background: var(--accent); color: #fff;
+  }
   .flow-body { overflow: hidden; max-height: 0; transition: max-height .3s ease; padding-left: 70px; }
   .flow-item.open .flow-body { max-height: 400px; }
   .flow-tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 10px; }
@@ -110,7 +126,7 @@
   .int-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: 12px; padding: 15px 17px; }
   .int-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
   .int-name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14px; }
-  .int-tags { display: flex; gap: 5px; flex-shrink: 0; }
+  .int-tags { display: flex; gap: 5px; flex-shrink: 0; align-items: center; }
   .int-tag { font-size: 10px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; color: var(--ink-dim); white-space: nowrap; }
   .int-tag.live { color: var(--good); border-color: var(--good); }
   .int-note { font-size: 12.5px; color: var(--ink-dim); line-height: 1.5; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
@@ -166,18 +182,21 @@
   <section class="block" id="workSection">
     <div class="section-label">The work, act by act</div>
     <h2 class="h font-display">How the work actually flowed</h2>
+    <span class="hint-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Tap an act to expand</span>
     <div class="flow-list" id="flowList"></div>
   </section>
 
   <section class="block" id="revenueSection">
     <div class="section-label">Revenue impact</div>
     <h2 class="h font-display">Revenue I directly own</h2>
+    <span class="hint-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Tap a client to expand</span>
     <div class="revenue-card" id="revenueList"></div>
   </section>
 
   <section class="block" id="integrationsSection">
     <div class="section-label">Third-party integrations</div>
     <h2 class="h font-display">Integrations I own</h2>
+    <span class="hint-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Tap a card to expand</span>
     <div class="chip-row" id="integrationBreakdown"></div>
     <div class="int-grid" id="integrationList"></div>
   </section>
@@ -312,10 +331,9 @@ flowSteps.forEach((s,i)=>{
   const item = document.createElement('div'); item.className = 'flow-item';
   const tagsHtml = s.tags.map(t=>'<span class="chip">'+t+'</span>').join('');
   item.innerHTML = '<div class="flow-head"><span class="flow-num font-display">ACT '+String(i+1).padStart(2,'0')+'</span>'+
-    '<span class="flow-title">'+s.title+'</span><span class="flow-toggle">+</span></div>'+
+    '<span class="flow-title">'+s.title+'</span><span class="expand-icon">+</span></div>'+
     '<div class="flow-body"><div class="flow-tags">'+tagsHtml+'</div><p>'+s.body+'</p></div>';
-  item.addEventListener('mouseenter', ()=> item.classList.add('open'));
-  item.addEventListener('mouseleave', ()=> item.classList.remove('open'));
+  item.querySelector('.flow-head').addEventListener('click', ()=> item.classList.toggle('open'));
   flowList.appendChild(item);
 });
 flowList.children[0].classList.add('open');
@@ -324,11 +342,10 @@ const revenueList = document.getElementById('revenueList');
 const maxMrr = Math.max(...revenueClients.map(c=>c.mrr));
 revenueClients.forEach(c=>{
   const row = document.createElement('div'); row.className = 'rev-row';
-  row.innerHTML = '<div class="rev-top"><span class="rev-name">'+c.name+'</span><span class="rev-amt">₹'+c.mrr.toLocaleString('en-IN')+'</span></div>'+
+  row.innerHTML = '<div class="rev-top"><span class="rev-name">'+c.name+'</span><span style="display:flex;align-items:center;gap:10px;"><span class="rev-amt">₹'+c.mrr.toLocaleString('en-IN')+'</span><span class="expand-icon">+</span></span></div>'+
     '<div class="rev-bar-track"><div class="rev-bar-fill"></div></div>'+
     '<div class="rev-note">'+c.note+'</div>';
-  row.addEventListener('mouseenter', ()=> row.classList.add('open'));
-  row.addEventListener('mouseleave', ()=> row.classList.remove('open'));
+  row.querySelector('.rev-top').addEventListener('click', ()=> row.classList.toggle('open'));
   revenueList.appendChild(row);
   requestAnimationFrame(()=>{ row.querySelector('.rev-bar-fill').style.width = Math.max(4,(c.mrr/maxMrr)*100)+'%'; });
 });
@@ -349,10 +366,9 @@ integrations.forEach(it=>{
   card.style.borderLeft = '3px solid '+(isLive(it.status) ? 'var(--good)' : it.inherited ? 'var(--accent)' : 'var(--ink)');
   card.innerHTML = '<div class="int-top"><span class="int-name">'+it.name+'</span><div class="int-tags">'+
     (it.inherited ? '<span class="int-tag">inherited</span>' : '')+
-    '<span class="int-tag'+(isLive(it.status)?' live':'')+'">'+it.status+'</span></div></div>'+
+    '<span class="int-tag'+(isLive(it.status)?' live':'')+'">'+it.status+'</span><span class="expand-icon">+</span></div></div>'+
     '<div class="int-note">'+it.note+'</div>';
-  card.addEventListener('mouseenter', ()=> card.classList.add('open'));
-  card.addEventListener('mouseleave', ()=> card.classList.remove('open'));
+  card.querySelector('.int-top').addEventListener('click', ()=> card.classList.toggle('open'));
   intList.appendChild(card);
 });
 
