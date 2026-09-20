@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Akash Sharma - Proof of Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light only;
+    --bg: #faf6f0;
+    --bg-card: #ffffff;
+    --ink: #16140f;
+    --ink-dim: #55504a;
+    --ink-faint: #928d84;
+    --accent: #d94a3a;
+    --accent-soft: #f6d9d2;
+    --gold: #c98500;
+    --teal: #1a8a72;
+    --blue: #2a5fd6;
+    --good: #2f7a4f;
+    --line: rgba(22,20,15,0.12);
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  .font-display { font-family: 'Space Grotesk', 'Inter', sans-serif; }
+  ::selection { background: var(--accent); color: #fff; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 44px 20px 80px; }
+
+  header.top {
+    background: var(--ink); color: var(--bg); border-radius: 20px;
+    padding: 28px 30px; display: flex; align-items: center; justify-content: space-between;
+    gap: 20px; flex-wrap: wrap;
+  }
+  .id-block { display: flex; align-items: center; gap: 16px; }
+  .avatar {
+    width: 52px; height: 52px; border-radius: 999px; background: var(--accent); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px;
+    flex-shrink: 0;
+  }
+  header.top h1 { font-size: 21px; margin: 0; }
+  header.top p { margin: 4px 0 0; font-size: 13px; color: #cfcac0; }
+  .tenure { text-align: right; }
+  .tenure strong { display: block; font-size: 24px; font-family: 'Space Grotesk', sans-serif; }
+  .tenure span { font-size: 12px; color: #cfcac0; }
+
+  .tagline { margin: 26px 0 8px; font-size: 15.5px; color: var(--ink-dim); max-width: 640px; line-height: 1.6; }
+
+  .section-label {
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600;
+  }
+  h2.h {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(21px, 3vw, 28px);
+    letter-spacing: -0.01em; margin: 4px 0 0;
+  }
+  section.block { margin-top: 46px; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 12px; margin-top: 22px; }
+  .stat-card {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 16px;
+    border-left: 4px solid var(--accent);
+  }
+  .stat-card .val { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(22px,3vw,28px); }
+  .stat-card .label { font-size: 12.5px; font-weight: 600; margin-top: 6px; }
+  .stat-card .sub { font-size: 11.5px; color: var(--ink-faint); margin-top: 3px; line-height: 1.4; }
+
+  .flow-list { margin-top: 24px; }
+  .flow-item { border-bottom: 1px solid var(--line); }
+  .flow-item:first-child { border-top: 1px solid var(--line); }
+  .flow-head {
+    display: flex; gap: 16px; align-items: flex-start; padding: 18px 4px; cursor: pointer; user-select: none;
+  }
+  .flow-num {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--accent); font-size: 12.5px;
+    min-width: 54px; padding-top: 3px; flex-shrink: 0;
+  }
+  .flow-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 15.5px; line-height: 1.35; flex: 1; }
+  .flow-toggle { font-size: 18px; color: var(--ink-faint); flex-shrink: 0; transition: transform .2s ease; }
+  .flow-item.open .flow-toggle { transform: rotate(45deg); }
+  .flow-body { overflow: hidden; max-height: 0; transition: max-height .3s ease; padding-left: 70px; }
+  .flow-item.open .flow-body { max-height: 400px; }
+  .flow-tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 10px; }
+  .chip { font-size: 11px; border: 1px solid var(--line); border-radius: 999px; padding: 3px 11px; color: var(--ink-dim); white-space: nowrap; }
+  .flow-body p { font-size: 13.5px; color: var(--ink-dim); line-height: 1.6; margin: 0 0 18px; max-width: 640px; }
+
+  .revenue-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: 14px; padding: 8px 22px; margin-top: 22px; }
+  .rev-row { padding: 15px 0; border-bottom: 1px solid var(--line); }
+  .rev-row:last-of-type { border-bottom: none; }
+  .rev-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; cursor: pointer; }
+  .rev-name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14.5px; }
+  .rev-amt { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14.5px; white-space: nowrap; }
+  .rev-bar-track { height: 6px; border-radius: 999px; background: var(--accent-soft); overflow: hidden; margin-top: 8px; }
+  .rev-bar-fill { height: 100%; border-radius: 999px; background: var(--accent); width: 0; transition: width 1s ease; }
+  .rev-note { font-size: 13px; color: var(--ink-dim); line-height: 1.55; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+  .rev-row.open .rev-note { max-height: 200px; margin-top: 10px; }
+  .rev-total { display: flex; justify-content: space-between; padding: 16px 0 8px; font-size: 13px; }
+  .rev-total strong { font-family: 'Space Grotesk', sans-serif; font-size: 16px; }
+
+  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .mini-chip { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; padding: 5px 13px; font-size: 12px; color: var(--ink-dim); }
+  .mini-chip strong { margin-right: 5px; color: var(--ink); }
+
+  .int-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 10px; margin-top: 22px; }
+  .int-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: 12px; padding: 15px 17px; cursor: pointer; }
+  .int-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .int-name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14px; }
+  .int-tags { display: flex; gap: 5px; flex-shrink: 0; }
+  .int-tag { font-size: 10px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; color: var(--ink-dim); white-space: nowrap; }
+  .int-tag.live { color: var(--good); border-color: var(--good); }
+  .int-note { font-size: 12.5px; color: var(--ink-dim); line-height: 1.5; max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+  .int-card.open .int-note { max-height: 200px; margin-top: 9px; }
+
+  .timeline-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 14px; margin-top: 22px; }
+  .t-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+  .t-month { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+  .t-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14.5px; margin-top: 8px; line-height: 1.35; }
+  .t-body { font-size: 12.5px; color: var(--ink-dim); line-height: 1.55; margin-top: 8px; }
+
+  .usp-box { background: var(--bg-card); border-left: 4px solid var(--gold); border-radius: 12px; padding: 18px 20px; margin-top: 22px; }
+  .usp-box p { margin: 0; font-size: 13.5px; color: var(--ink-dim); line-height: 1.6; }
+
+  .beyond-list { margin-top: 20px; }
+  .beyond-item { display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .beyond-item:first-child { border-top: 1px solid var(--line); }
+  .b-dot { width: 9px; height: 9px; border-radius: 999px; margin-top: 6px; flex-shrink: 0; }
+  .beyond-item h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14.5px; margin: 0; }
+  .beyond-item p { font-size: 13px; color: var(--ink-dim); margin: 6px 0 0; line-height: 1.55; max-width: 640px; }
+
+  footer.foot {
+    margin-top: 60px; padding-top: 22px; border-top: 1px solid var(--line);
+    font-size: 12px; color: var(--ink-faint); text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="id-block">
+      <div class="avatar">AS</div>
+      <div>
+        <h1 class="font-display">Akash Sharma</h1>
+        <p>Associate Product Manager &middot; Zopping &middot; joined 4 Aug 2025</p>
+      </div>
+    </div>
+    <div class="tenure">
+      <strong id="tenureVal" class="font-display">...</strong>
+      <span>months at Zopping</span>
+    </div>
+  </header>
+
+  <p class="tagline">A record of what I've actually owned and shipped since joining.</p>
+
+  <section class="block">
+    <div class="section-label">Impact, at a glance</div>
+    <h2 class="h font-display">The numbers behind the work</h2>
+    <div class="stat-grid" id="statGrid"></div>
+  </section>
+
+  <section class="block" id="workSection">
+    <div class="section-label">The work, act by act</div>
+    <h2 class="h font-display">How the work actually flowed</h2>
+    <div class="flow-list" id="flowList"></div>
+  </section>
+
+  <section class="block" id="revenueSection">
+    <div class="section-label">Revenue impact</div>
+    <h2 class="h font-display">Revenue I directly own</h2>
+    <div class="revenue-card" id="revenueList"></div>
+  </section>
+
+  <section class="block" id="integrationsSection">
+    <div class="section-label">Third-party integrations</div>
+    <h2 class="h font-display">Integrations I own</h2>
+    <div class="chip-row" id="integrationBreakdown"></div>
+    <div class="int-grid" id="integrationList"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-label">Growth over the year</div>
+    <h2 class="h font-display">From onboarding to owning production integrations</h2>
+    <div class="timeline-grid" id="timelineList"></div>
+  </section>
+
+  <section class="block" id="beyondSection">
+    <div class="section-label">What the numbers don't show</div>
+    <h2 class="h font-display">The day-to-day texture behind the numbers</h2>
+    <div class="usp-box"><p id="uspText"></p></div>
+    <div class="beyond-list" id="beyondList"></div>
+  </section>
+
+  <footer class="foot">Data current as of <span id="asOf"></span>.</footer>
+
+</div>
+
+<script>
+const TENURE_START = new Date('2025-08-04');
+const TODAY = new Date();
+
+const flowSteps = [
+  { title: 'Owned the Bioveda migration end to end', tags: ['Phase 1 & 2'],
+    body: "Ran Bioveda's full migration onto Zopping as a tracked program, not a single ticket: consumer frontend across Android/iOS/Web, reports and analytics, referral system, KM Code (commission-agent) workflow, multilingual catalogue upload, staff-to-staff linking, and the membership work below, each broken into its own sub-ticket with acceptance criteria and owners. Included KT sessions, client calls, and go-live testing." },
+  { title: 'Designed the cross-system order-routing architecture for the KOW Shopify integration', tags: ['Shopify x Zopping x RDEP x Unicommerce', 'Final, agreed on client call'],
+    body: "The original design had Zopping and Unicommerce both touching every order (a HOLD/UNHOLD/cancel-on-dispatch dance). Redesigned it so Zopping is the single source of combined inventory pushed to Shopify and the only system that ever pulls an incoming order, deciding upfront, based on customer location and live stock, whether an RDEP store or the Unicommerce warehouse fulfills it. This removed an entire class of race conditions and was agreed as final on the client call." },
+  { title: 'Designed the Cycle Counting extension from scratch', tags: ['Deployed on Prod'],
+    body: 'Wrote the full feature spec for a store-level inventory-counting extension: the admin flow, the picker-app flow, and a phase-2 roadmap. Coordinated directly with the backend engineer on the API contract, with copy and status-based action rules refined with design and QA. Shipped through stage testing to production.' },
+  { title: "Generalized a single client's ask into a platform-level VIP membership system", tags: ['Bioveda -> platform'],
+    body: 'Bioveda needed a VIP membership tier, but instead of a one-off, wrote the requirements so membership became a first-class, order-level entity for the whole platform: purchasable at checkout, a configurable savings cap, membership revenue broken out separately in reports, and multiple concurrent plans, all config-driven. Bioveda became the first implementation of a framework any future client can turn on.' },
+  { title: 'Applied the same integration playbook to a new partner with a different shape of problem', tags: ['Uber Direct', 'new 3PL, not OMS/POS'],
+    body: 'KOW/Shopify was an OMS and inventory-routing problem. Uber Direct is a delivery/3PL partner, so the work was billing setup, account creation and coordinating with the dev team on a fresh integration. Also carried the India Post integration solo and led the GetZency integration call end to end.' },
+  { title: 'Took incident ownership on a feature a senior teammate had built (Abandoned Cart)', tags: ['Critical', 'Deployed on Prod'],
+    body: 'Abandoned Cart reporting broke in production for a client. Triaged the Critical issue personally: assigned it to the right backend engineer, coordinated client credentials, pushed the fix through staging QA, then followed it to prod deploy and closure. Also pulled in on a separate crash and a cron job CPU-spike investigation.' },
+  { title: 'Drove order clubbing as a delivery-cost feature for BioVeda', tags: ['Order clubbing', 'PRD authored'],
+    body: "Took a raw ask, group BioVeda's ASAP and Standard-slot orders two to five per rider to cut delivery cost and improve route efficiency, and turned it into a shippable feature: wrote the full PRD, circulated it to the wider product and engineering group, then opened and tracked the follow-on implementation work." },
+  { title: 'Drove the requirements and build decision for a dedicated Zopping Sales App', tags: ['Sales App', 'PRD authored'],
+    body: "Salesperson login needed a home in the platform. Evaluated building it into the existing admin app versus a standalone app, weighed the regression risk against a focused, independent-release app, and settled on a dedicated Sales App sharing the platform's common UI component library. Wrote the PRD, coordinated the design handoff, and tracked the build through to development." },
+  { title: 'Closed the visibility gap behind unreported crashes and bugs', tags: ['cross-platform', 'Firebase'],
+    body: 'App crashes and slowdowns on Android and iOS were going unreported because nothing was in place to catch them. Took ownership of rolling out performance monitoring (Firebase Performance SDK, HTTP tracing, GA4 linkage) across both platforms: assigned the work, pressed for a delivery timeline, and negotiated a revised ETA when it slipped rather than letting the work stall.' },
+  { title: 'Proposed and rolled out Windows Scheduler as a lightweight inventory-sync workaround', tags: ['client-device integration', '15-min sync interval'],
+    body: "For clients whose in-store system cannot push inventory to Zopping over an API, set up a Windows Task Scheduler job on the client's own device that pushes inventory automatically every 15 minutes. Wrote the setup documentation, personally configured and rolled it out for multiple accounts, and resolved live client queries on an integration call." },
+];
+
+const integrations = [
+  { name:'Shopify (Custom App / KOW)', status:'Live', note:'Orders, customers, inventory sync, actively followed up on order-cancellation and fulfillment flow', inherited:true },
+  { name:'Uber Direct (3PL)', status:'In progress', note:'New integration initiated by Akash, billing setup and account creation coordinated with dev team', inherited:false },
+  { name:'Retail Whizz', status:'Kickoff call scheduled', note:'P0 priority, originally owned by a different teammate. Drove weekly follow-ups to unblock it and scheduled the kickoff call', inherited:true },
+  { name:'PetPooja', status:'Live (with bugs)', note:'Deduplication bug and SAP Code migration, inherited ownership. Also shipped the invoice integration end-to-end', inherited:true },
+  { name:'India Post', status:'In progress', note:'New integration, sole point of contact end to end', inherited:false },
+  { name:'Unicommerce', status:'In production', note:'Cross-channel inventory sync, inherited ownership, coordinated with Efacto team on sync issues', inherited:true },
+  { name:'Ozontel', status:'Live', note:'Completed end-to-end testing with dev team, confirmed functionality to client', inherited:false },
+  { name:'LoadShare', status:'On hold', note:'Inherited; responded to integration queries to restart discussion', inherited:true },
+  { name:'QuickShift', status:'In production', note:'Inherited; followed up on return-address parameter handling', inherited:true },
+  { name:'GetZency', status:'In progress', note:'Led integration call on order-processing flow, tracking ID generation, tracking URL validation', inherited:false },
+  { name:'Mover (3PL)', status:'In triage', note:'New logistics partner integration, identified and initiated', inherited:false },
+  { name:'EasyEcom', status:'In progress', note:'Catalogue and order sync partner for Tab Sports and Body Care, requested production credentials', inherited:false },
+  { name:'Presca Fresh (Fresh by Bhram)', status:'In progress', note:'New client integration, researched and mapped with a UML diagram before flow discussion', inherited:false },
+  { name:'GrowAsana (WhatsApp)', status:'In progress', note:'WhatsApp ordering integration for Sodhis, credentials shared and flow explained on a joint call', inherited:false },
+  { name:'Vox Connect', status:'In progress', note:'Completed end-to-end integration testing with the development team', inherited:false },
+];
+
+const revenueClients = [
+  { name:'Tab Sports', mrr:25000, note:'Owns the EasyEcom catalogue-sync work and requested production credentials for the account' },
+  { name:'GetZency', mrr:21800, note:'Led the integration call end to end, order-processing flow, tracking-ID and tracking-URL validation' },
+  { name:'Body Care', mrr:12500, note:'Owns the Shopify Custom App go-live for the account, plus production credentials' },
+  { name:'Kondli Bazar', mrr:10000, note:'Debugged and resolved a variant-level configuration issue for the account' },
+  { name:'KOW', mrr:75000, note:'Shopify partner integration, order-routing architecture designed end to end, caught the Unicommerce inventory-sync bug blocking go-live' },
+  { name:'Bioveda', mrr:25000, note:'Full migration, VIP membership framework, ongoing client calls and KT sessions' },
+  { name:'Shreejee Foods', mrr:25000, note:'Client calls and catalogue/Efacto integration work' },
+  { name:'Anmasa', mrr:70000, note:'Sole integration owner for webhooks and the order-import API, plus Shopify catalogue sync and debugging' },
+  { name:'RSM Mall', mrr:66767, note:'End-to-end account ownership: flow discussion, rider and picker app flow, Windows Scheduler setup for seamless inventory sync' },
+  { name:'India Sweet House', mrr:75000, note:'Full end-to-end PetPooja integration, menu sync and complete order-journey testing' },
+  { name:'Zafraan Mega Mart', mrr:12500, note:'Windows Scheduler setup, catalogue and inventory setup, flow explained (future Retail Whizz integration planned)' },
+  { name:'Eden Super Market', mrr:10000, note:'Windows Scheduler setup, catalogue and inventory setup, flow explained (future Retail Whizz integration planned)' },
+  { name:'Eetoj', mrr:10000, note:'Developed the delivery-by-apartment functionality and resolved variant and catalogue-related bugs' },
+  { name:'Shree Shyam Mega Mart', mrr:7500, note:'Worked on catalogue and inventory bugs, plus image retrieval from the web for the catalogue' },
+  { name:'Petzcart', mrr:5000, note:'Built the integration feature for advance pet-booking calls with seamless integration' },
+  { name:'Scarlet', mrr:200000, note:'Diagnosed and fixed the root cause of a recurring order-payment failure, and coordinated end-to-end staging testing of a migrated picker-app version, confirming the fix for a refund-not-initiated bug before production sign-off' },
+];
+
+const timeline = [
+  { month:'Aug 2025', title:'Onboarding & product grounding', body:'Joined 4 Aug. First month writing PRDs, testing extensions end-to-end, drafting release notes, building full-product fluency before owning tickets.' },
+  { month:'Sep 2025 - Jan 2026', title:'Ramped into ticket ownership', body:'Started authoring and resolving tickets directly. 18 tickets in September alone. Regular collaboration with senior PM Mayuresh on release notes and client requirements.' },
+  { month:'Jan - Mar 2026', title:'Full ticket load, client-facing ownership', body:'Peak ticket-authoring months, Bioveda migration phase 1 and 2, VIP membership, referral system, reporting overhauls, mostly as sole author on complex multi-week tickets.' },
+  { month:'Mar - Sep 2026', title:'Expanded integration ownership', body:'Picked up active follow-up on integrations plus led new integrations end-to-end. Started initiating platform-level features on own judgment, and personally filed 50 bug/feature reports in the last two months.' },
+];
+
+const beyond = [
+  { c:'var(--accent)', title:'Face-to-face client meetings, not just tickets', body: 'Sat with clients in person to hear out an issue directly, then used that conversation to help shape the product roadmap for the coming months.' },
+  { c:'var(--blue)', title:'Always reachable for client calls', body: 'Took client calls on off days when the situation needed it, treating the client relationship as the priority over the calendar.' },
+  { c:'var(--teal)', title:'Go-to person for product questions on the team', body: 'Regularly the one colleagues came to for clarifying how a feature or flow actually works.' },
+  { c:'var(--gold)', title:'Highest scorer, Zopping company cricket tournament', body: "Finished as the tournament's highest scorer, a contribution to the team going on to win as champions." },
+  { c:'var(--good)', title:'Contributed to the new pricing plan redesign', body: "Ran a market and competitor study, then cross-checked those patterns against what existing clients were saying, to help shape which plan structure would work best." },
+  { c:'var(--accent)', title:'Built the Product Quiz App on own initiative', body: 'Solo-built a full app for a company-wide weekly product-knowledge quiz, with login, timed assessment, scoring and a leaderboard, outside of any assigned ticket.' },
+];
+
+const usp = "The USP is pain-point resolution and talking to clients in their own data, walking a client through their own numbers rather than just shipping a feature. That shows up as recurring MOMs, client calls, and daily API verification with clients and partners before committing to a fix or a timeline, none of which shows up as a ticket count.";
+
+const revenueTotal = revenueClients.reduce((a,c)=>a+c.mrr,0);
+const isLive = s => s.toLowerCase().includes('live') || s.toLowerCase().includes('production');
+
+function fmtMonths(n){ const y=Math.floor(n/12), m=n%12; return (y?y+"y ":"")+m+"m"; }
+const monthsSince = (TODAY.getFullYear()-TENURE_START.getFullYear())*12 + (TODAY.getMonth()-TENURE_START.getMonth());
+document.getElementById('tenureVal').textContent = fmtMonths(monthsSince);
+document.getElementById('asOf').textContent = TODAY.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+document.getElementById('uspText').textContent = usp;
+
+const stats = [
+  { val: '₹'+revenueTotal.toLocaleString('en-IN')+'/mo', label:'Client MRR directly owned', sub: revenueClients.length+' accounts', color:'var(--gold)' },
+  { val: 124, label:'Tickets authored', sub:'across the full tenure', color:'var(--blue)' },
+  { val: 479, label:'Client tickets worked on', sub:"comments/follow-ups on others' tickets", color:'var(--teal)' },
+  { val: integrations.length, label:'Integrations actively owned', sub: integrations.filter(i=>i.inherited).length+' picked up from a teammate', color:'var(--accent)' },
+  { val: '32+', label:'Client accounts touched', sub:'worked on since joining', color:'var(--blue)' },
+  { val: 50, label:'Issues reported', sub:'last ~2 months alone', color:'var(--accent)' },
+];
+
+const statGrid = document.getElementById('statGrid');
+stats.forEach(s=>{
+  const d = document.createElement('div'); d.className = 'stat-card';
+  d.style.borderLeftColor = s.color;
+  d.innerHTML = '<div class="val font-display">'+s.val+'</div><div class="label">'+s.label+'</div><div class="sub">'+s.sub+'</div>';
+  statGrid.appendChild(d);
+});
+
+const flowList = document.getElementById('flowList');
+flowSteps.forEach((s,i)=>{
+  const item = document.createElement('div'); item.className = 'flow-item';
+  const tagsHtml = s.tags.map(t=>'<span class="chip">'+t+'</span>').join('');
+  item.innerHTML = '<div class="flow-head"><span class="flow-num font-display">ACT '+String(i+1).padStart(2,'0')+'</span>'+
+    '<span class="flow-title">'+s.title+'</span><span class="flow-toggle">+</span></div>'+
+    '<div class="flow-body"><div class="flow-tags">'+tagsHtml+'</div><p>'+s.body+'</p></div>';
+  item.querySelector('.flow-head').addEventListener('click', ()=> item.classList.toggle('open'));
+  flowList.appendChild(item);
+});
+flowList.children[0].classList.add('open');
+
+const revenueList = document.getElementById('revenueList');
+const maxMrr = Math.max(...revenueClients.map(c=>c.mrr));
+revenueClients.forEach(c=>{
+  const row = document.createElement('div'); row.className = 'rev-row';
+  row.innerHTML = '<div class="rev-top"><span class="rev-name">'+c.name+'</span><span class="rev-amt">₹'+c.mrr.toLocaleString('en-IN')+'</span></div>'+
+    '<div class="rev-bar-track"><div class="rev-bar-fill"></div></div>'+
+    '<div class="rev-note">'+c.note+'</div>';
+  row.querySelector('.rev-top').addEventListener('click', ()=> row.classList.toggle('open'));
+  revenueList.appendChild(row);
+  requestAnimationFrame(()=>{ row.querySelector('.rev-bar-fill').style.width = Math.max(4,(c.mrr/maxMrr)*100)+'%'; });
+});
+const totalRow = document.createElement('div'); totalRow.className = 'rev-total';
+totalRow.innerHTML = '<span>Total MRR across owned accounts</span><strong class="font-display">₹'+revenueTotal.toLocaleString('en-IN')+'/mo</strong>';
+revenueList.appendChild(totalRow);
+
+const liveCount = integrations.filter(i=>isLive(i.status)).length;
+const inheritedCount = integrations.filter(i=>i.inherited).length;
+document.getElementById('integrationBreakdown').innerHTML =
+  '<span class="mini-chip"><strong>'+integrations.length+'</strong> total partners</span>'+
+  '<span class="mini-chip"><strong>'+liveCount+'</strong> live / in production</span>'+
+  '<span class="mini-chip"><strong>'+inheritedCount+'</strong> picked up from a teammate</span>';
+
+const intList = document.getElementById('integrationList');
+integrations.forEach(it=>{
+  const card = document.createElement('div'); card.className = 'int-card';
+  card.style.borderLeft = '3px solid '+(isLive(it.status) ? 'var(--good)' : it.inherited ? 'var(--accent)' : 'var(--ink)');
+  card.innerHTML = '<div class="int-top"><span class="int-name">'+it.name+'</span><div class="int-tags">'+
+    (it.inherited ? '<span class="int-tag">inherited</span>' : '')+
+    '<span class="int-tag'+(isLive(it.status)?' live':'')+'">'+it.status+'</span></div></div>'+
+    '<div class="int-note">'+it.note+'</div>';
+  card.addEventListener('click', ()=> card.classList.toggle('open'));
+  intList.appendChild(card);
+});
+
+const tList = document.getElementById('timelineList');
+timeline.forEach(t=>{
+  const card = document.createElement('div'); card.className = 't-card';
+  card.innerHTML = '<div class="t-month">'+t.month+'</div><div class="t-title font-display">'+t.title+'</div><div class="t-body">'+t.body+'</div>';
+  tList.appendChild(card);
+});
+
+const beyondList = document.getElementById('beyondList');
+beyond.forEach(b=>{
+  const item = document.createElement('div'); item.className = 'beyond-item';
+  item.innerHTML = '<span class="b-dot" style="background:'+b.c+'"></span><div><h3 class="font-display">'+b.title+'</h3><p>'+b.body+'</p></div>';
+  beyondList.appendChild(item);
+});
+</script>
+</body>
+</html>
