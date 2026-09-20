@@ -74,7 +74,7 @@
   .flow-item { border-bottom: 1px solid var(--line); }
   .flow-item:first-child { border-top: 1px solid var(--line); }
   .flow-head {
-    display: flex; gap: 16px; align-items: flex-start; padding: 18px 4px; cursor: pointer; user-select: none;
+    display: flex; gap: 16px; align-items: flex-start; padding: 18px 4px; user-select: none;
   }
   .flow-num {
     font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--accent); font-size: 12.5px;
@@ -92,7 +92,7 @@
   .revenue-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: 14px; padding: 8px 22px; margin-top: 22px; }
   .rev-row { padding: 15px 0; border-bottom: 1px solid var(--line); }
   .rev-row:last-of-type { border-bottom: none; }
-  .rev-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; cursor: pointer; }
+  .rev-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
   .rev-name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14.5px; }
   .rev-amt { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14.5px; white-space: nowrap; }
   .rev-bar-track { height: 6px; border-radius: 999px; background: var(--accent-soft); overflow: hidden; margin-top: 8px; }
@@ -107,7 +107,7 @@
   .mini-chip strong { margin-right: 5px; color: var(--ink); }
 
   .int-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 10px; margin-top: 22px; }
-  .int-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: 12px; padding: 15px 17px; cursor: pointer; }
+  .int-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: 12px; padding: 15px 17px; }
   .int-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
   .int-name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14px; }
   .int-tags { display: flex; gap: 5px; flex-shrink: 0; }
@@ -314,7 +314,8 @@ flowSteps.forEach((s,i)=>{
   item.innerHTML = '<div class="flow-head"><span class="flow-num font-display">ACT '+String(i+1).padStart(2,'0')+'</span>'+
     '<span class="flow-title">'+s.title+'</span><span class="flow-toggle">+</span></div>'+
     '<div class="flow-body"><div class="flow-tags">'+tagsHtml+'</div><p>'+s.body+'</p></div>';
-  item.querySelector('.flow-head').addEventListener('click', ()=> item.classList.toggle('open'));
+  item.addEventListener('mouseenter', ()=> item.classList.add('open'));
+  item.addEventListener('mouseleave', ()=> item.classList.remove('open'));
   flowList.appendChild(item);
 });
 flowList.children[0].classList.add('open');
@@ -326,7 +327,8 @@ revenueClients.forEach(c=>{
   row.innerHTML = '<div class="rev-top"><span class="rev-name">'+c.name+'</span><span class="rev-amt">₹'+c.mrr.toLocaleString('en-IN')+'</span></div>'+
     '<div class="rev-bar-track"><div class="rev-bar-fill"></div></div>'+
     '<div class="rev-note">'+c.note+'</div>';
-  row.querySelector('.rev-top').addEventListener('click', ()=> row.classList.toggle('open'));
+  row.addEventListener('mouseenter', ()=> row.classList.add('open'));
+  row.addEventListener('mouseleave', ()=> row.classList.remove('open'));
   revenueList.appendChild(row);
   requestAnimationFrame(()=>{ row.querySelector('.rev-bar-fill').style.width = Math.max(4,(c.mrr/maxMrr)*100)+'%'; });
 });
@@ -349,7 +351,8 @@ integrations.forEach(it=>{
     (it.inherited ? '<span class="int-tag">inherited</span>' : '')+
     '<span class="int-tag'+(isLive(it.status)?' live':'')+'">'+it.status+'</span></div></div>'+
     '<div class="int-note">'+it.note+'</div>';
-  card.addEventListener('click', ()=> card.classList.toggle('open'));
+  card.addEventListener('mouseenter', ()=> card.classList.add('open'));
+  card.addEventListener('mouseleave', ()=> card.classList.remove('open'));
   intList.appendChild(card);
 });
 
